@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.chemistsmc</groupId>
+    <artifactId>minigamesframework</artifactId>
+    <version>1.0.0</version>
+
+    <name>MinigamesFramework</name>
+    <description>Spigot framework for minigames projects.</description>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <!-- Project properties -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.jdkVersion>1.8</project.jdkVersion>
+
+        <!-- Output properties -->
+        <project.outputName>MinigamesFramework</project.outputName>
+        <project.buildNumber>CUSTOM</project.buildNumber>
+        <project.versionCode>${project.version}-b${project.buildNumber}</project.versionCode>
+        <project.finalName>${project.outputName}-${project.version}</project.finalName>
+
+        <!-- BukkitPlugin properties -->
+        <bukkitplugin.name>${project.outputName}</bukkitplugin.name>
+        <bukkitplugin.main>${project.groupId}.${artifactId}.${bukkitplugin.name}</bukkitplugin.main>
+        <bukkitplugin.authors>ChemistsMC Team</bukkitplugin.authors>
+
+        <!-- Change Bukkit Version HERE! -->
+        <bukkit.version>1.12-R0.1-SNAPSHOT</bukkit.version>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://mit-license.org/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${bukkit.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bungeecord-chat</artifactId>
+                    <groupId>net.md-5</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- ConfigMe -->
+        <dependency>
+            <groupId>ch.jalu</groupId>
+            <artifactId>configme</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!-- Dependency Injector -->
+        <dependency>
+            <groupId>ch.jalu</groupId>
+            <artifactId>injector</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <defaultGoal>clean install</defaultGoal>
+        <resources>
+            <resource>
+                <directory>.</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- Maven Java Compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>${project.jdkVersion}</source>
+                    <target>${project.jdkVersion}</target>
+                </configuration>
+            </plugin>
+            <!-- Test Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <argLine>-Dfile.encoding=${project.build.sourceEncoding} @{argLine}</argLine>
+                </configuration>
+            </plugin>
+            <!-- Libs Shading and Relocation -->
+            <plugin>
+                <!--
+                Relocate all lib we use in order to fix class loading errors if we use different versions
+                than already loaded libs (i.e. by Mojang -> gson)
+                -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <minimizeJar>true</minimizeJar>
+                    <artifactSet>
+                        <includes>
+                            <include>ch.jalu:*</include>
+                            <include>javax.inject</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Test coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Coveralls data -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+                <configuration>
+                    <!-- Provided by Travis CI -->
+                    <repoToken>${env.coveralls_repo_token}</repoToken>
+                    <failOnServiceError>false</failOnServiceError>
+                </configuration>
+                <!-- The secret token is provided by console! -->
+            </plugin>
+            <!-- Javadocs settings -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <show>public</show>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+            <!-- Replacer -->
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>target/classes/plugin.yml</file>
+                    <replacements>
+                        <replacement>
+                            <token>maven-version</token>
+                            <value>${project.version}</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

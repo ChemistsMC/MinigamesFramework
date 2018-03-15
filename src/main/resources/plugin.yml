@@ -1,0 +1,4 @@
+main: maven-main
+version: maven-version
+name: maven-name
+author: maven-authors
