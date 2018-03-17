@@ -15,7 +15,6 @@ public class Arena
     private Location upperBound;
     private Location lowerBound;
     private Set<Location> teamSpawns;
-    private Set<Location> chests;
 
     /**
      * Constructor.
@@ -24,21 +23,17 @@ public class Arena
      * @param upperBound The upper corner of the area containing the arena.
      * @param lowerBound The lower corner of the area containing the arena.
      * @param teamSpawns A collection of Locations for the teams to spawn at.
-     * @param chests A collection of chests that the arena needs to know about.
-     *               If an arena doesn't have chests, pass an empty set.
      */
     public Arena(Location lobby,
                  Location upperBound,
                  Location lowerBound,
-                 Set<Location> teamSpawns,
-                 Set<Location> chests)
+                 Set<Location> teamSpawns)
     {
         this.lobby = lobby;
         this.inUse = false;
         this.upperBound = upperBound;
         this.lowerBound = lowerBound;
         this.teamSpawns = teamSpawns;
-        this.chests = chests;
     }
 
     /**
@@ -79,16 +74,6 @@ public class Arena
     public Set<Location> getTeamSpawns()
     {
         return teamSpawns;
-    }
-
-    /**
-     * Get all of the chests in the arena.
-     *
-     * @return A set containing all of the chests.
-     */
-    public Set<Location> getChests()
-    {
-        return chests;
     }
 
     /**
