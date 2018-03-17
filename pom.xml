@@ -224,8 +224,20 @@
                     <file>target/classes/plugin.yml</file>
                     <replacements>
                         <replacement>
+                            <token>maven-main</token>
+                            <value>${bukkitplugin.main}</value>
+                        </replacement>
+                        <replacement>
                             <token>maven-version</token>
                             <value>${project.version}</value>
+                        </replacement>
+                        <replacement>
+                            <token>maven-name</token>
+                            <value>${bukkitplugin.name}</value>
+                        </replacement>
+                        <replacement>
+                            <token>maven-authors</token>
+                            <value>${bukkitplugin.authors}</value>
                         </replacement>
                     </replacements>
                 </configuration>
