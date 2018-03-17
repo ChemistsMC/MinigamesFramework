@@ -1,4 +1,4 @@
-package com.chemistsmc.minigamesframework;
+package com.chemistsmc.minigamesframework.game;
 
 /**
  * Enumerates the various states that a game can be in.

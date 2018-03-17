@@ -1,4 +1,6 @@
-package com.chemistsmc.minigamesframework;
+package com.chemistsmc.minigamesframework.game;
+
+import com.chemistsmc.minigamesframework.arena.Arena;
 
 import java.util.Set;
 

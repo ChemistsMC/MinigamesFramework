@@ -1,4 +1,4 @@
-package com.chemistsmc.minigamesframework;
+package com.chemistsmc.minigamesframework.arena;
 
 import org.bukkit.Location;
 
